@@ -1,0 +1,3 @@
+/dev/ci/vendor/
+/dev/ci/composer.lock
+/dev/ci/.phpunit.cache/

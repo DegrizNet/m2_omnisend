@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!-- Omnisend snippet, forms and pop-ups -->
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <value id="omnisend-snippet" type="host">https://omnisnippet1.com</value>
+                <value id="omnisend-src" type="host">https://*.omnisrc.com</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="omnisend-snippet" type="host">https://*.omnisnippet1.com</value>
+                <value id="omnisend-snippet-root" type="host">https://omnisnippet1.com</value>
+                <value id="omnisend-api" type="host">https://*.omnisend.com</value>
+                <value id="omnisend-forms" type="host">https://*.soundestlink.com</value>
+            </values>
+        </policy>
+        <policy id="img-src">
+            <values>
+                <value id="omnisend-src" type="host">https://*.omnisrc.com</value>
+                <value id="omnisend-snippet" type="host">https://*.omnisnippet1.com</value>
+            </values>
+        </policy>
+        <policy id="style-src">
+            <values>
+                <value id="omnisend-src" type="host">https://*.omnisrc.com</value>
+            </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <value id="omnisend-src" type="host">https://*.omnisrc.com</value>
+            </values>
+        </policy>
+        <policy id="frame-src">
+            <values>
+                <value id="omnisend-forms" type="host">https://*.omnisend.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

@@ -1,0 +1,28 @@
+<?php
+/**
+ * Order success page: tells the snippet who the buyer is, so later visits and cart events of a guest
+ * are attributed to the right contact. Waits until the launcher is there (it may wait for consent).
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+/** @var \Magelan\Omnisend\ViewModel\Tracking $viewModel */
+$viewModel = $block->getData('view_model');
+$contact = $viewModel ? $viewModel->getIdentifyJson() : null;
+if ($contact === null) {
+    return;
+}
+$script = <<<JS
+(function (contact) {
+    var tries = 0, timer = setInterval(function () {
+        if (window.omnisend && typeof window.omnisend.identifyContact === 'function') {
+            clearInterval(timer);
+            window.omnisend.identifyContact(contact);
+        } else if (++tries > 300) {
+            clearInterval(timer);
+        }
+    }, 1000);
+})($contact);
+JS;
+?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', ['data-defer-js-ignore' => 'true'], $script, false) ?>

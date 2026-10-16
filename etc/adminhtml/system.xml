@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="magelan_omnisend" translate="label" sortOrder="420" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Omnisend</label>
+            <tab>customer</tab>
+            <resource>Magelan_Omnisend::config</resource>
+            <group id="general" translate="label comment" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Connection</label>
+                <comment><![CDATA[Omnisend: Store settings &rarr; API keys &rarr; Create API key (all permissions this module uses: Contacts, Events, Products, Categories).]]></comment>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="api_key" translate="label comment" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>API Key</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <comment><![CDATA[Store views with different keys write to different Omnisend accounts (brands). No Omnisend account yet? <a href="https://your.omnisend.com/aNkJqZ" target="_blank" rel="noopener sponsored">Create a free Omnisend account</a> (partner link), then copy the key from Omnisend: Store settings &gt; API keys.]]></comment>
+                </field>
+                <field id="brand_id" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Brand ID</label>
+                    <comment>Only for the web tracking snippet. Filled in automatically from Omnisend (connection test or the first cron run) when left empty.</comment>
+                </field>
+                <field id="test" translate="label" type="button" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Connection Test</label>
+                    <frontend_model>Magelan\Omnisend\Block\Adminhtml\System\TestButton</frontend_model>
+                </field>
+                <field id="api_version" translate="label comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>API Version</label>
+                    <source_model>Magelan\Omnisend\Model\Config\Source\ApiVersion</source_model>
+                    <comment>Omnisend retires v5 on 30 June 2027. Keep the dated version unless told otherwise.</comment>
+                </field>
+                <field id="debug" translate="label comment" type="select" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Log API Requests</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Writes every request and answer to var/log/magelan_omnisend.log. For troubleshooting only.</comment>
+                </field>
+            </group>
+            <group id="tracking" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Web Tracking</label>
+                <field id="snippet" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Omnisend Snippet</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Needed for Omnisend forms and pop-ups, page views and for recognising visitors who come from an Omnisend e-mail.</comment>
+                </field>
+                <field id="consent_mode" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Load Snippet</label>
+                    <source_model>Magelan\Omnisend\Model\Config\Source\ConsentMode</source_model>
+                    <comment>"After cookie consent" works with the Magento cookie notice and with Swissup GDPR cookie groups.</comment>
+                    <depends>
+                        <field id="snippet">1</field>
+                    </depends>
+                </field>
+                <field id="consent_group" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cookie Group</label>
+                    <comment>Swissup GDPR cookie group that must be accepted (usually "marketing").</comment>
+                    <depends>
+                        <field id="snippet">1</field>
+                        <field id="consent_mode">cookie</field>
+                    </depends>
+                </field>
+                <field id="viewed_product" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Track "viewed product"</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="snippet">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="events" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Events</label>
+                <field id="added_to_cart" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>"added product to cart"</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Sent with the whole cart and a link that restores it on any device.</comment>
+                </field>
+                <field id="started_checkout" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>"started checkout"</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="orders" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Order Events</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>placed order, paid for order (invoice), order fulfilled (shipment), order canceled, order refunded (credit memo).</comment>
+                </field>
+                <field id="tracking_urls" translate="label comment" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Parcel Tracking Links</label>
+                    <comment><![CDATA[One rule per line: <code>carrier | https://...{number}</code>. The first rule whose carrier text is found in the shipment's carrier code or title is used.]]></comment>
+                    <depends>
+                        <field id="orders">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="contacts" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Contacts</label>
+                <field id="newsletter" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Newsletter Subscriptions</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Subscribe and unsubscribe in Magento (footer form, account, checkout) set the e-mail consent in Omnisend.</comment>
+                </field>
+                <field id="customers" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Customer Accounts</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="orders" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Buyers From Orders</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Name, address and phone of the buyer. Never changes their consent.</comment>
+                </field>
+            </group>
+            <group id="catalog" translate="label comment" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product Catalog</label>
+                <comment><![CDATA[Products and categories are sent when saved. First import of the whole catalog: <code>bin/magento magelan:omnisend:sync products</code>.]]></comment>
+                <field id="products" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Products</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="categories" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Categories</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="queue" translate="label" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Queue</label>
+                <field id="status" translate="label" type="label" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Status</label>
+                    <frontend_model>Magelan\Omnisend\Block\Adminhtml\System\QueueStatus</frontend_model>
+                </field>
+                <field id="batch_size" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Rows Per Cron Run</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                </field>
+                <field id="max_attempts" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Attempts Before Giving Up</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                </field>
+                <field id="keep_days" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Keep Sent Rows (days)</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

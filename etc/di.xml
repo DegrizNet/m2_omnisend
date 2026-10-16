@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Own log file: var/log/magelan_omnisend.log (other Omnisend modules use omnisend.log) -->
+    <virtualType name="Magelan\Omnisend\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/magelan_omnisend.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magelan\Omnisend\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="name" xsi:type="string">omnisend</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="file" xsi:type="object">Magelan\Omnisend\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magelan\Omnisend\Model\Api\Client">
+        <arguments>
+            <argument name="logger" xsi:type="object">Magelan\Omnisend\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Magelan\Omnisend\Model\Queue\Processor">
+        <arguments>
+            <argument name="logger" xsi:type="object">Magelan\Omnisend\Logger</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="event" xsi:type="object">Magelan\Omnisend\Model\Queue\Handler\EventHandler</item>
+                <item name="order" xsi:type="object">Magelan\Omnisend\Model\Queue\Handler\OrderHandler</item>
+                <item name="contact" xsi:type="object">Magelan\Omnisend\Model\Queue\Handler\ContactHandler</item>
+                <item name="product" xsi:type="object">Magelan\Omnisend\Model\Queue\Handler\ProductHandler</item>
+                <item name="category" xsi:type="object">Magelan\Omnisend\Model\Queue\Handler\CategoryHandler</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magelan\Omnisend\Model\Queue\Queue">
+        <arguments>
+            <argument name="logger" xsi:type="object">Magelan\Omnisend\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Magelan\Omnisend\Model\BrandId">
+        <arguments>
+            <argument name="logger" xsi:type="object">Magelan\Omnisend\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Magelan\Omnisend\Model\CartEvents">
+        <arguments>
+            <argument name="logger" xsi:type="object">Magelan\Omnisend\Logger</argument>
+        </arguments>
+    </type>
+
+    <!-- Session-bound services stay lazy, so cron and CLI never start a session -->
+    <type name="Magelan\Omnisend\Model\Contact\Identity">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Magelan\Omnisend\Plugin\CheckoutEmailEntered">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Magelan\Omnisend\Controller\Restore\Index">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+
+    <!-- A guest's e-mail typed at checkout starts "started checkout" -->
+    <type name="Magento\Customer\Api\AccountManagementInterface">
+        <plugin name="magelan_omnisend_checkout_email" type="Magelan\Omnisend\Plugin\CheckoutEmailEntered"/>
+    </type>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="magelan_omnisend_sync" xsi:type="object">Magelan\Omnisend\Console\Command\Sync</item>
+                <item name="magelan_omnisend_queue" xsi:type="object">Magelan\Omnisend\Console\Command\QueueCommand</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magelan\Omnisend\Console\Command\Sync">
+        <arguments>
+            <argument name="catalogQueue" xsi:type="object">Magelan\Omnisend\Model\CatalogQueue\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Magelan\Omnisend\Console\Command\QueueCommand">
+        <arguments>
+            <argument name="processor" xsi:type="object">Magelan\Omnisend\Model\Queue\Processor\Proxy</argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,21 @@
+<?php
+/**
+ * @var \Magelan\Omnisend\Block\Adminhtml\System\TestButton $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+$url = $escaper->escapeJs($block->getTestUrl());
+$script = <<<JS
+require(['jquery'], function ($) {
+    $('#magelan-omnisend-test').on('click', function () {
+        var out = $('#magelan-omnisend-test-result').text('…');
+        $.ajax({url: '{$url}', type: 'POST', dataType: 'json', data: {form_key: window.FORM_KEY}, showLoader: true})
+            .done(function (r) { out.text(r.message).toggleClass('message-error', !r.success); })
+            .fail(function () { out.text('Request failed').addClass('message-error'); });
+    });
+});
+JS;
+?>
+<button type="button" class="action-default" id="magelan-omnisend-test"><span><?= $escaper->escapeHtml(__('Test Connection')) ?></span></button>
+<p class="note"><span id="magelan-omnisend-test-result"><?= $escaper->escapeHtml(__('Save the API key first; the test uses the saved key of this scope.')) ?></span></p>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $script, false) ?>

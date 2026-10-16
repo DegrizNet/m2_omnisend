@@ -1,0 +1,31 @@
+<?php
+/**
+ * "viewed product" (eventVersion v4). Queued in window.omnisend; sent by the snippet once it loads.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+/** @var \Magelan\Omnisend\ViewModel\Tracking $viewModel */
+$viewModel = $block->getData('view_model');
+if (!$viewModel || !$viewModel->isViewedProductEnabled()) {
+    return;
+}
+$product = $viewModel->getViewedProductJson();
+if ($product === null) {
+    return;
+}
+$script = <<<JS
+(function (product) {
+    var id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+        : 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, function () { return (Math.random() * 16 | 0).toString(16); });
+    window.omnisend = window.omnisend || [];
+    omnisend.push(['track', 'viewed product', {
+        origin: 'api',
+        eventVersion: 'v4',
+        eventID: id,
+        properties: {product: product}
+    }]);
+})($product);
+JS;
+?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', ['data-defer-js-ignore' => 'true'], $script, false) ?>

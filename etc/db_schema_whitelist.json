@@ -1,0 +1,39 @@
+{
+    "magelan_omnisend_queue": {
+        "column": {
+            "queue_id": true,
+            "store_id": true,
+            "entity_type": true,
+            "action": true,
+            "object_id": true,
+            "payload": true,
+            "status": true,
+            "attempts": true,
+            "response_code": true,
+            "last_error": true,
+            "next_attempt_at": true,
+            "created_at": true,
+            "updated_at": true,
+            "sent_at": true
+        },
+        "index": {
+            "MAGELAN_OMNISEND_QUEUE_STATUS_NEXT_ATTEMPT_AT": true,
+            "MAGELAN_OMNISEND_QUEUE_ENTITY_TYPE_OBJECT_ID_STORE_ID": true,
+            "MAGELAN_OMNISEND_QUEUE_CREATED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "magelan_omnisend_catalog": {
+        "column": {
+            "entity_type": true,
+            "store_id": true,
+            "object_id": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

@@ -1,0 +1,53 @@
+{
+    "name": "degriznet/m2_omnisend",
+    "description": "Omnisend integration for Magento 2 (Omnisend API 2026-03-15 and v5): cart, checkout and order events with cart-restore links, contacts with newsletter consent, product catalog and web tracking. Luma and Hyva, Firecheckout.",
+    "type": "magento2-module",
+    "license": "MIT",
+    "keywords": ["magento", "magento2", "omnisend", "email marketing", "abandoned cart", "newsletter", "hyva"],
+    "homepage": "https://github.com/DegrizNet/m2_omnisend",
+    "authors": [
+        {
+            "name": "Degriz",
+            "homepage": "https://www.degriz.net",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/DegrizNet/m2_omnisend/issues",
+        "source": "https://github.com/DegrizNet/m2_omnisend"
+    },
+    "require": {
+        "php": "~8.1.0||~8.2.0||~8.3.0||~8.4.0",
+        "guzzlehttp/guzzle": "^7.0",
+        "magento/framework": "^103.0",
+        "magento/module-backend": "*",
+        "magento/module-catalog": "*",
+        "magento/module-catalog-inventory": "*",
+        "magento/module-checkout": "*",
+        "magento/module-config": "*",
+        "magento/module-customer": "*",
+        "magento/module-newsletter": "*",
+        "magento/module-quote": "*",
+        "magento/module-sales": "*",
+        "magento/module-store": "*"
+    },
+    "suggest": {
+        "swissup/module-gdpr": "The snippet then waits for the visitor's marketing cookie consent"
+    },
+    "archive": {
+        "exclude": [
+            "/.gitattributes",
+            "/.gitignore",
+            "/.github",
+            "/dev"
+        ]
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magelan\\Omnisend\\": ""
+        }
+    }
+}

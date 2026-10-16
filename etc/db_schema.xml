@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <!-- Outbox: every call to Omnisend is written here first and sent by cron, so a slow or failing API
+         never slows down the storefront and nothing is lost while Omnisend is unreachable. -->
+    <table name="magelan_omnisend_queue" resource="default" engine="innodb" comment="Omnisend outbox">
+        <column xsi:type="int" name="queue_id" unsigned="true" nullable="false" identity="true" comment="Queue ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" default="0" comment="Store ID"/>
+        <column xsi:type="varchar" name="entity_type" length="32" nullable="false" comment="event, order, contact, product, category"/>
+        <column xsi:type="varchar" name="action" length="64" nullable="false" comment="Event name, upsert or delete"/>
+        <column xsi:type="varchar" name="object_id" length="255" nullable="false" comment="Quote, order, product or category ID, or e-mail"/>
+        <column xsi:type="mediumtext" name="payload" nullable="true" comment="JSON built when the row was queued"/>
+        <column xsi:type="varchar" name="status" length="16" nullable="false" default="pending" comment="pending, processing, sent, failed"/>
+        <column xsi:type="smallint" name="attempts" unsigned="true" nullable="false" default="0" comment="Attempts"/>
+        <column xsi:type="smallint" name="response_code" unsigned="true" nullable="true" comment="Last HTTP status"/>
+        <column xsi:type="text" name="last_error" nullable="true" comment="Last error"/>
+        <column xsi:type="datetime" name="next_attempt_at" nullable="true" comment="Not before (UTC)"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated"/>
+        <column xsi:type="datetime" name="sent_at" nullable="true" comment="Sent (UTC)"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="queue_id"/>
+        </constraint>
+        <index referenceId="MAGELAN_OMNISEND_QUEUE_STATUS_NEXT_ATTEMPT_AT" indexType="btree">
+            <column name="status"/>
+            <column name="next_attempt_at"/>
+        </index>
+        <index referenceId="MAGELAN_OMNISEND_QUEUE_ENTITY_TYPE_OBJECT_ID_STORE_ID" indexType="btree">
+            <column name="entity_type"/>
+            <column name="object_id"/>
+            <column name="store_id"/>
+        </index>
+        <index referenceId="MAGELAN_OMNISEND_QUEUE_CREATED_AT" indexType="btree">
+            <column name="created_at"/>
+        </index>
+    </table>
+    <!-- Products and categories Omnisend already has: POST for new ones, PUT/PATCH for known ones, so no
+         404 or 409 lowers the sync rate Omnisend shows. -->
+    <table name="magelan_omnisend_catalog" resource="default" engine="innodb" comment="Omnisend catalog items sent">
+        <column xsi:type="varchar" name="entity_type" length="32" nullable="false" comment="product or category"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" default="0" comment="Store ID"/>
+        <column xsi:type="varchar" name="object_id" length="64" nullable="false" comment="Product or category ID"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_type"/>
+            <column name="store_id"/>
+            <column name="object_id"/>
+        </constraint>
+    </table>
+</schema>

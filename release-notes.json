@@ -1,0 +1,27 @@
+{
+    "module": "Magelan_Omnisend",
+    "package": "degriznet/m2_omnisend",
+    "releases": [
+        {"version": "1.0.6", "date": "2026-10-16",
+         "sl": ["Povezava za brezplačen račun Omnisend je v nastavitvah prikazana le enkrat."],
+         "en": ["The link to create a free Omnisend account appears only once in the settings."]},
+        {"version": "1.0.5", "date": "2026-10-15",
+         "sl": ["Opombe ob izdaji za stran modula."],
+         "en": ["Release notes for the module page."]},
+        {"version": "1.0.4", "date": "2026-10-15",
+         "sl": ["V nastavitvah je ob API ključu povezava za brezplačen račun Omnisend (partnerska povezava, kot taka označena) in navodilo, kje ključ najdete."],
+         "en": ["Settings have a link to create a free Omnisend account next to the API key (a partner link, marked as such) and a note on where to find the key."]},
+        {"version": "1.0.3", "date": "2026-10-15",
+         "sl": ["Izdelki in kategorije se pri prvem pošiljanju pošljejo s pravilnim načinom, zato Omnisend ne beleži napak sinhronizacije izdelkov ob vsakem novem izdelku.", "Izbris se pošlje le za izdelke in kategorije, ki jih Omnisend ima."],
+         "en": ["Products and categories are sent with the right method the first time, so Omnisend no longer reports a product sync issue after each new product.", "A delete is sent only for products and categories Omnisend has."]},
+        {"version": "1.0.2", "date": "2026-10-14",
+         "sl": ["Popravek: novi izdelki se v Omnisendu pravilno ustvarijo."],
+         "en": ["Fix: new products are now created correctly in Omnisend."]},
+        {"version": "1.0.1", "date": "2026-10-14",
+         "sl": ["Sledilna koda deluje že samo z ID-jem blagovne znamke, zato obrazci in ogledi strani lahko začnejo delovati, še preden vnesete API ključ."],
+         "en": ["The web snippet works with only the brand ID, so forms and page views can start before you enter the API key."]},
+        {"version": "1.0.0", "date": "2026-10-14",
+         "sl": ["Prva objava: lasten modul za Omnisend (API 2026-03-15 in v5), z vrsto in ponovnimi poskusi.", "Dogodki: dodan izdelek v košarico, začetek blagajne (tudi Firecheckout), oddano in plačano naročilo, odposlano z linkom za sledenje, preklicano in vrnjeno naročilo.", "Podpisana povezava za vrnitev v košarico v e-pošti o zapuščeni košarici.", "Stiki: privolitev za novice z IP-jem in brskalnikom, kupci in naročniki.", "Katalog: izdelki z različicami in kategorije, s polnim uvozom iz ukazne vrstice.", "Sledilna koda po soglasju za piškotke ter prepoznava kupca na strani zahvale."],
+         "en": ["First release: a dedicated Omnisend module (API 2026-03-15 and v5), with a queue and retries.", "Events: added to cart, started checkout (also Firecheckout), placed and paid order, fulfilled with tracking links, cancelled and refunded orders.", "A signed cart restore link for abandoned cart e-mails.", "Contacts: newsletter consent with IP and browser, customers and buyers.", "Catalog: products with variants and categories, with a full import from the command line.", "The web snippet after cookie consent, and buyer identification on the thank-you page."]}
+    ]
+}

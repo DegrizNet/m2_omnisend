@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="magelan_omnisend_process_queue" instance="Magelan\Omnisend\Cron\ProcessQueue" method="execute">
+            <schedule>* * * * *</schedule>
+        </job>
+        <job name="magelan_omnisend_cleanup" instance="Magelan\Omnisend\Cron\Cleanup" method="execute">
+            <schedule>23 3 * * *</schedule>
+        </job>
+    </group>
+</config>

@@ -1,0 +1,62 @@
+<?php
+/**
+ * Omnisend web snippet. The launcher is only loaded once the visitor has given the cookie consent the
+ * shop asks for (Swissup GDPR group or the Magento cookie notice); until then calls only wait in the
+ * window.omnisend array and nothing leaves the browser.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+/** @var \Magelan\Omnisend\ViewModel\Tracking $viewModel */
+$viewModel = $block->getData('view_model');
+if (!$viewModel || !$viewModel->isEnabled()) {
+    return;
+}
+$config = $viewModel->getSnippetConfigJson();
+$script = <<<JS
+(function (cfg) {
+    window.omnisend = window.omnisend || [];
+    omnisend.push(['brandID', cfg.brandId]);
+    omnisend.push(['track', '\$pageViewed']);
+
+    function cookie(name) {
+        var match = document.cookie.match('(?:^|; )' + name + '=([^;]*)');
+        return match ? decodeURIComponent(match[1]) : null;
+    }
+    function allowed() {
+        if (cfg.consent === 'none') {
+            return true;
+        }
+        if (cfg.consent === 'swissup') {
+            try {
+                var groups = (JSON.parse(cookie(cfg.swissupCookie) || '{}').groups) || [];
+                return groups.indexOf(cfg.group) !== -1;
+            } catch (e) {
+                return false;
+            }
+        }
+        return !!cookie(cfg.magentoCookie);
+    }
+    function load() {
+        var e = document.createElement('script');
+        e.async = true;
+        e.src = 'https://omnisnippet1.com/inshop/launcher-v2.js';
+        document.head.appendChild(e);
+    }
+    if (allowed()) {
+        load();
+        return;
+    }
+    // Consent can be given later on this page (cookie bar); check again for a while.
+    var tries = 0, timer = setInterval(function () {
+        if (allowed()) {
+            clearInterval(timer);
+            load();
+        } else if (++tries > 600) {
+            clearInterval(timer);
+        }
+    }, 1000);
+})($config);
+JS;
+?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', ['data-defer-js-ignore' => 'true'], $script, false) ?>

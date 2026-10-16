@@ -1,0 +1,39 @@
+{
+    "name": "degriznet/m2_omnisend-ci",
+    "description": "Test harness for degriznet/m2_omnisend. Not part of the package.",
+    "type": "project",
+    "license": "MIT",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../..",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "composer",
+            "url": "https://mirror.mage-os.org/"
+        }
+    ],
+    "require": {
+        "degriznet/m2_omnisend": "*@dev"
+    },
+    "require-dev": {
+        "magento/magento-coding-standard": "*",
+        "phpunit/phpunit": "^10.5 || ^11.5"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "magento/composer-dependency-version-audit-plugin": false,
+            "magento/magento-composer-installer": false,
+            "magento/inventory-composer-installer": false,
+            "laminas/laminas-dependency-plugin": false,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "php-http/discovery": false
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
